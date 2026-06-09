@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserCard from "./UserCard";
 import PostCard from "./PostCard";
 import { getUsers, staticPosts } from "./Services";
+import { use } from "react";
 
 function Exercise() {
   const [users, setUsers] = useState([]);

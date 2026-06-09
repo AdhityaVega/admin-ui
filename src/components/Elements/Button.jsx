@@ -9,16 +9,19 @@ function Button(props) {
         secondary: "bg-gray-05 text-gray-02"
     };
 
-    const finalClasses = `${baseClasses} ${
-      variantClasses[variant] || variantClasses.primary
+    const finalClasses = `${baseClasses} ${ variantClasses[variant] || variantClasses.primary
     }`;
 
     return (
         <>
-            <button className={finalClasses} type={type}>
+            <button 
+                className={finalClasses} 
+                type={type}
+            >
                 {children}
             </button>
         </>
+        
     );
 }
 
