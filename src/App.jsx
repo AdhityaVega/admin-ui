@@ -1,8 +1,9 @@
 import "./App.css";
-import SignInPage from "./pages/SignIn";
-import SignUpPage from "./pages/SignUp";
+import SignInPage from "./pages/signIn";
+import SignUpPage from "./pages/signUp";
 import ErrorPage from "./pages/error";
 import DashboardPage from "./pages/dashboard";
+import BalancePage from "./pages/balance";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -10,17 +11,21 @@ function App() {
   const myRouter = createBrowserRouter([
     {
       path: "/",
-      element: <DashboardPage />,
-      errorElement: <ErrorPage />,
+      element: <DashboardPage/>,
+      errorElement: <ErrorPage/>,
     },
     {
       path: "/login",
-      element: <SignInPage />,
+      element: <SignInPage/>,
     },
     {
       path: "/register",
-      element: <SignUpPage />,
-    }
+      element: <SignUpPage/>,
+    },
+    {
+      path: "/balance",
+      element: <BalancePage/>,
+    },
   ]);
 
   return (
