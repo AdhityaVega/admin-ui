@@ -9,7 +9,7 @@ export const goalService = async () => {
     const response = await axios.get(`${API_URL}/goals`, {
       headers: {
         Authorization: `Bearer ${token}`,
-      }, 
+      },
     });
     return response.data.data[0];
   } catch (error) {

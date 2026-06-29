@@ -5,89 +5,136 @@ import Button from '../Elements/Button';
 import { Link } from "react-router-dom";
 import { useState } from 'react';
 
-function FormSignIn(onSubmit) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-    const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(email, password);
-    };
+const SignInSchema = Yup.object().shape({
+  email: Yup.string().email("Email tidak valid").required("Email wajib diisi"),
+  password: Yup.string().required("Password wajib diisi"),
+});
+
+function FormSignIn({ onSubmit }) {
 
     return (
         <>
             {/* form start */}
             <div className="mt-16">
-            <form onSubmit={handleSubmit}>
-                <div className="mb-6">
-                <LabeledInput 
-                    label="Email Address"
-                    id="email"
-                    type="email"
-                    placeholder="hello@example.com"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                </div>
-                <div className="mb-6">
-                <LabeledInput 
-                    label="Password"
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                </div>
-                <div className="mb-3">
-                <CheckBox 
-                    label="Keep me signed in"
-                    id="status"
-                    type="checkbox"
-                    name="status"
-                />
-                </div>
-                <Button>Login</Button>
-            </form>
+                <Formik
+                    initialValues={{
+                        email: "",
+                        password: "",
+                        status: false,
+                    }}
+                    validationSchema={SignInSchema}
+                    onSubmit={async (values, { setSubmitting }) => {
+                        try {
+                            if (onSubmit) {
+                                await onSubmit(values.email, values.password);
+                            }
+                        } finally {
+                            setSubmitting(false);
+                        }
+                    }}
+                >
+                    {({ isSubmitting }) => (
+                        <Form>
+                            {/* EMAIL */}
+                            <div className="mb-6">
+                                <Field name="email">
+                                    {({ field }) => (
+                                        <LabeledInput
+                                            {...field}
+                                            id="email"
+                                            type="email"
+                                            label="Email Address"
+                                            placeholder="hello@example.com"
+                                        />
+                                    )}
+                                </Field>
+                                <ErrorMessage
+                                    name="email"
+                                    component="p"
+                                    className="text-red-500 text-xs mt-1"
+                                />
+                            </div>
+
+                            {/* PASSWORD */}
+                            <div className="mb-6">
+                                <Field name="password">
+                                    {({ field }) => (
+                                        <LabeledInput
+                                            {...field}
+                                            id="password"
+                                            type="password"
+                                            label="Password"
+                                            placeholder="••••••••"
+                                        />
+                                    )}
+                                </Field>
+                                <ErrorMessage
+                                    name="password"
+                                    component="p"
+                                    className="text-red-500 text-xs mt-1"
+                                />
+                            </div>
+
+                            {/* CHECKBOX */}
+                            <div className="mb-3">
+                                <Field name="status">
+                                    {({ field }) => (
+                                        <CheckBox
+                                            {...field}
+                                            id="status"
+                                            type="checkbox"
+                                            checked={field.value}
+                                            label="Keep me signed in"
+                                        />
+                                    )}
+                                </Field>
+                            </div>
+                            {/* BUTTON */}
+                            <Button>{isSubmitting ? "Loading..." : "Login"}</Button>
+                        </Form>
+                    )}
+                </Formik>
             </div>
             {/* form end */}
             {/* teks start */}
             <div className="my-9 px-7 flex flex-col justify-center items-center text-xs text-gray-03">
-            <div className="border border-gray-05 w-full"></div>
-            <div className="px-2 bg-special-mainBg absolute"> or sign in with</div>
+                <div className="border border-gray-05 w-full"></div>
+                <div className="px-2 bg-special-mainBg absolute"> or sign in with</div>
             </div>
             {/* teks end */}
             {/* sign in with google start */}
             <div className="mb-8">
                 <Button type="button" variant="secondary">
                     <span className="flex items-center justify-center">
-                    <svg
-                        className="h-6 w-6 mr-2"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="800"
-                        height="800"
-                        viewBox="-0.5 0 48 48"
-                    >
-                        <path
-                        d="M9.82727273,24 C9.82727273,22.4757333 10.0804318,21.0144 10.5322727,19.6437333 L2.62345455,13.6042667 C1.08206818,16.7338667 0.213636364,20.2602667 0.213636364,24 C0.213636364,27.7365333 1.081,31.2608 2.62025,34.3882667 L10.5247955,28.3370667 C10.0772273,26.9728 9.82727273,25.5168 9.82727273,24"
-                        fill="#FBBC05"
-                        />
-                        <path
-                        d="M23.7136364,10.1333333 C27.025,10.1333333 30.0159091,11.3066667 32.3659091,13.2266667 L39.2022727,6.4 C35.0363636,2.77333333 29.6954545,0.533333333 23.7136364,0.533333333 C14.4268636,0.533333333 6.44540909,5.84426667 2.62345455,13.6042667 L10.5322727,19.6437333 C12.3545909,14.112 17.5491591,10.1333333 23.7136364,10.1333333"
-                        fill="#EB4335"
-                        />
-                        <path
-                        d="M23.7136364,37.8666667 C17.5491591,37.8666667 12.3545909,33.888 10.5322727,28.3562667 L2.62345455,34.3946667 C6.44540909,42.1557333 14.4268636,47.4666667 23.7136364,47.4666667 C29.4455,47.4666667 34.9177955,45.4314667 39.0249545,41.6181333 L31.5177727,35.8144 C29.3995682,37.1488 26.7323182,37.8666667 23.7136364,37.8666667"
-                        fill="#34A853"
-                        />
-                        <path
-                        d="M46.1454545,24 C46.1454545,22.6133333 45.9318182,21.12 45.6113636,19.7333333 L23.7136364,19.7333333 L23.7136364,28.8 L36.3181818,28.8 C35.6879545,31.8912 33.9724545,34.2677333 31.5177727,35.8144 L39.0249545,41.6181333 C43.3393409,37.6138667 46.1454545,31.6490667 46.1454545,24"
-                        fill="#4285F4"
-                        />
-                    </svg>
-                    Continue with Google
+                        <svg
+                            className="h-6 w-6 mr-2"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlnsXlink="http://www.w3.org/1999/xlink"
+                            width="800"
+                            height="800"
+                            viewBox="-0.5 0 48 48"
+                            version="1.1"
+                        >
+                            <title>Google-color</title> <desc>Created with Sketch.</desc>
+                            <defs> </defs>
+                            <g
+                                id="Icons"
+                                stroke="none"
+                                strokeWidth="1"
+                                fill="none"
+                                fillRule="evenodd"
+
+                            >
+                                <path fill="#4285F4" d="M46.1454 24.0287C46.1454 22.09 45.9731 20.19 45.6441 18.356H24V32.7203H36.6343C36.09 37.4947 33.3444 41.5367 29.2483 44.2057V53.2503H36.6437C40.9703 49.336 43.4357 43.5187 43.4357 36.6977V36.6977Z" />
+                                <path fill="#34A853" d="M24 48C30.2223 48 35.4526 45.941 39.2631 42.6107L31.6429 33.5663C29.5854 34.9457 26.966 35.7953 24 35.7953C18.2577 35.7953 13.3986 31.916 11.646 26.702H3.98543V35.9147C7.68343 43.2563 15.2289 48 24 48Z" />
+                                <path fill="#FBBC05" d="M11.646 26.702C11.1963 25.3587 10.9429 23.9053 10.9429 22.4013C10.9429 20.8973 11.1963 19.444 11.646 18.1007V8.88806H3.98543C2.43457 11.979 1.51714 15.421 1.51714 18.9957C1.51714 22.5703 2.43457 26.0123 3.98543 29.1033L11.646 26.702Z" />
+                                <path fill="#EA4335" d="M24 9.00467C27.3826 9.00467 30.4074 10.1697 32.7937 12.4437L39.4294 5.808C35.4411 2.09633 30.2109 0 24 0C15.2289 0 7.68343 4.74367 3.98543 12.0853L11.646 21.298C13.3986 16.084 18.2577 9.00467 24 9.00467Z" />
+                            </g>
+                        </svg>
+                        Continue with Google
                     </span>
                 </Button>
             </div>

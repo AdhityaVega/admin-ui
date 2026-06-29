@@ -269,7 +269,7 @@ export const balances = [
     accountType: "Saving",
     accountNumber: "133 456 886 80000",
     balance: 25000,
-    logo: <Icon.Bank width={40} />,
+    logo: <Icon.Other width={40} />,
   },
   {
     id: 4,
