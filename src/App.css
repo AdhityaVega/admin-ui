@@ -46,3 +46,33 @@ html {
 .theme-brown {
   --color-primary: #8b4513;
 }
+
+/* Dark Mode Overrides */
+html.dark {
+  --color-special-mainBg: #1c1c24;
+  --color-gray-05: #333340;
+  --color-gray-02: #a0a0b0;
+}
+html.dark .bg-white {
+  background-color: #252530;
+  color: #ffffff;
+}
+html.dark .text-defaultBlack {
+  color: #ffffff;
+}
+html.dark .bg-special-mainBg {
+  background-color: #1c1c24;
+  color: #ffffff;
+}
+html.dark .border-gray-05 {
+  border-color: #333340;
+}
+html.dark .text-gray-02 {
+  color: #a0a0b0;
+}
+html.dark header .font-bold.text-2xl {
+  color: #ffffff;
+}
+html.dark .text-gray-03 {
+  color: #a0a0b0;
+}

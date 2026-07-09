@@ -1,58 +1,112 @@
 import React from 'react'
 import LabeledInput from '../Elements/LabeledInput'
 import Button from '../Elements/Button'
-import CheckBox from '../Elements/CheckBox'
 import { Link } from "react-router-dom";
 
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-function FormSignUp() {
+const SignUpSchema = Yup.object().shape({
+  name: Yup.string().required("Name wajib diisi"),
+  email: Yup.string().email("Email tidak valid").required("Email wajib diisi"),
+  password: Yup.string().required("Password wajib diisi"),
+});
+
+function FormSignUp({ onSubmit }) {
     return (
         <>
             {/* form start */}
             <div className="mt-16">
-                <form action="">
-                    <div className="mb-6">
-                        <LabeledInput
-                            label="Name"
-                            id="name"
-                            type="text"
-                            placeholder="Tanzir Rahman"
-                            name="name"
-                        />
-                    </div>
-                    <div className="mb-6">
-                        <LabeledInput
-                            label="Email Address"
-                            id="email"
-                            type="email"
-                            placeholder="hello@example.com"
-                            name="email"
-                        />
-                    </div>
-                    <div className="mb-6">
-                        <LabeledInput
-                            label="Password"
-                            id="password"
-                            type="password"
-                            placeholder="**************"
-                            name="password" />
-                    </div>
-                    <div className="mb-3">
-                        <CheckBox
-                            label="Keep me signed in"
-                            id="status"
-                            type="checkbox"
-                            name="status"
-                        />
-                    </div>
-                    <Button>Sign Up</Button>
-                </form>
+                <Formik
+                    initialValues={{
+                        name: "",
+                        email: "",
+                        password: "",
+                    }}
+                    validationSchema={SignUpSchema}
+                    onSubmit={async (values, { setSubmitting }) => {
+                        try {
+                            if (onSubmit) {
+                                await onSubmit(values.name, values.email, values.password);
+                            }
+                        } finally {
+                            setSubmitting(false);
+                        }
+                    }}
+                >
+                    {({ isSubmitting }) => (
+                        <Form>
+                            {/* NAME */}
+                            <div className="mb-6">
+                                <Field name="name">
+                                    {({ field }) => (
+                                        <LabeledInput
+                                            {...field}
+                                            id="name"
+                                            type="text"
+                                            label="Name"
+                                            placeholder="Tanzir Rahman"
+                                        />
+                                    )}
+                                </Field>
+                                <ErrorMessage
+                                    name="name"
+                                    component="p"
+                                    className="text-red-500 text-xs mt-1"
+                                />
+                            </div>
+
+                            {/* EMAIL */}
+                            <div className="mb-6">
+                                <Field name="email">
+                                    {({ field }) => (
+                                        <LabeledInput
+                                            {...field}
+                                            id="email"
+                                            type="email"
+                                            label="Email Address"
+                                            placeholder="hello@example.com"
+                                        />
+                                    )}
+                                </Field>
+                                <ErrorMessage
+                                    name="email"
+                                    component="p"
+                                    className="text-red-500 text-xs mt-1"
+                                />
+                            </div>
+
+                            {/* PASSWORD */}
+                            <div className="mb-6">
+                                <Field name="password">
+                                    {({ field }) => (
+                                        <LabeledInput
+                                            {...field}
+                                            id="password"
+                                            type="password"
+                                            label="Password"
+                                            placeholder="**************"
+                                        />
+                                    )}
+                                </Field>
+                                <ErrorMessage
+                                    name="password"
+                                    component="p"
+                                    className="text-red-500 text-xs mt-1"
+                                />
+                            </div>
+
+                            {/* BUTTON */}
+                            <Button>{isSubmitting ? "Loading.." : "Register"}</Button>
+                        </Form>
+                    )}
+                </Formik>
             </div>
             {/* form end */}
             {/* teks start */}
             <div className="my-9 px-7 flex flex-col justify-center items-center text-xs text-gray-03">
                 <div className="border border-gray-05 w-full"></div>
-                <div className="px-2 bg-special-mainBg absolute"> or sign in with</div>
+                <div className="px-2 bg-special-mainBg absolute"> or sign up with</div>
             </div>
             {/* teks end */}
             {/* sign in with google start */}
@@ -93,7 +147,7 @@ function FormSignUp() {
             {/* link start */}
             <div className="flex justify-center">
                 <Link to="/login" className="text-primary text-sm font-bold">
-                    Already have an account? Sign In
+                    Already have an account? Sign In in Here
                 </Link>
             </div>
             {/* link end */}

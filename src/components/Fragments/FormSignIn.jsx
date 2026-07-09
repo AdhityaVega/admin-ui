@@ -3,7 +3,10 @@ import LabeledInput from '../Elements/LabeledInput';
 import CheckBox from '../Elements/CheckBox';
 import Button from '../Elements/Button';
 import { Link } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { ModeContext } from '../../context/modeContext';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -14,6 +17,7 @@ const SignInSchema = Yup.object().shape({
 });
 
 function FormSignIn({ onSubmit }) {
+    const { isDarkMode, setIsDarkMode } = useContext(ModeContext);
 
     return (
         <>
@@ -140,10 +144,24 @@ function FormSignIn({ onSubmit }) {
             </div>
             {/* sign in with google end */}
             {/* link start */}
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center mt-6 space-y-2">
                 <Link to="/register" className="text-primary text-sm font-bold">
                     Create an account
                 </Link>
+                <Link to="#" className="text-gray-03 text-xs">
+                    Forgot Password
+                </Link>
+                
+                <div 
+                    className="cursor-pointer mt-4" 
+                    onClick={() => setIsDarkMode(!isDarkMode)}
+                >
+                    {isDarkMode ? (
+                        <LightModeIcon className="text-white" />
+                    ) : (
+                        <DarkModeOutlinedIcon className="text-gray-03" />
+                    )}
+                </div>
             </div>
             {/* link end */}
         </>
